@@ -1,20 +1,54 @@
 package Task_1;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+
+        Map<String, ArrayList<String>> numbersMap = null;
+
+        List<Integer> codesList = new ArrayList<Integer>();
+        JsonObject obj = getRequest("https://onlinesim.ru/api/getFreeCountryList");
+        JsonArray codesArray = obj.getAsJsonArray("countries");
+
+        for (int i = 0; i < codesArray.size(); i++) {
+            if (!codesArray.get(i).getAsJsonObject().get("country").isJsonNull()) {
+                int code = codesArray.get(i).getAsJsonObject().get("country").getAsInt();
+                codesList.add(code);
+            }
+        }
+
+        for (Integer code : codesList
+        ) {
+            List<String> numberList = new ArrayList<String>();
+            JsonObject object = getRequest("https://onlinesim.ru/api/getFreePhoneList?country=" + code);
+            JsonArray numArray = object.getAsJsonArray("numbers");
+            for (int i = 0; i < numArray.size(); i++) {
+                if (!numArray.get(i).getAsJsonObject().get("full_number").isJsonNull()) {
+                    String number = numArray.get(i).getAsJsonObject().get("full_number").getAsString();
+                    numberList.add(number);
+                }
+            }
+
+        }
+
+    }
+
 
     //Добавим метод-обработчик URL для получения json
 
-    public JsonObject getRequest(String inputUrl) throws IOException {
+    public static JsonObject getRequest(String inputUrl) throws IOException {
         JsonObject jsonObject = new JsonObject();
         Gson gson = new Gson();
         URL url = new URL(inputUrl);
@@ -28,7 +62,6 @@ public class Main {
         }
         bufferedReader.close();
         return jsonObject;
-
     }
 
 
