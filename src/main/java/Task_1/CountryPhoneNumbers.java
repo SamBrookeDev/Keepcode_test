@@ -54,9 +54,11 @@ public class CountryPhoneNumbers {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+
         while ((responce = bufferedReader.readLine()) != null) {
             jsonObject = gson.fromJson(responce, JsonObject.class);
         }
+
         bufferedReader.close();
         return jsonObject;
     }
@@ -65,16 +67,15 @@ public class CountryPhoneNumbers {
         Gson gson = new Gson();
         String json = gson.toJson(input);
 
-        try (
-                FileWriter writer = new FileWriter("result.json", false)) {
+        try (FileWriter writer = new FileWriter("result.json", false)) {
 
             writer.write(json);
             writer.flush();
 
-        } catch (
-                IOException ex) {
+        } catch (IOException ex) {
 
             System.out.println(ex.getMessage());
+
         }
     }
 
