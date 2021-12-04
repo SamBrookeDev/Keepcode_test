@@ -3,7 +3,9 @@ package Task_1;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -44,9 +46,15 @@ public class Main {
         Gson gson = new Gson();
         String json = gson.toJson(numbersMap);
 
+        try (FileWriter writer = new FileWriter("result.json", false)) {
 
+            writer.write(json);
+            writer.flush();
 
+        } catch (IOException ex) {
 
+            System.out.println(ex.getMessage());
+        }
     }
 
 
