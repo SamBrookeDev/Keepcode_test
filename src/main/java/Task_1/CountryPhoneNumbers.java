@@ -3,7 +3,9 @@ package Task_1;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GetMap {
+public class CountryPhoneNumbers {
 
     public Map<String, ArrayList<String>> getMap() throws IOException {
         Map<String, ArrayList<String>> numbersMap = new HashMap<>();
@@ -43,7 +45,7 @@ public class GetMap {
 
     //Добавим метод-обработчик URL для получения json
 
-    public JsonObject getRequest(String inputUrl) throws IOException {
+    private JsonObject getRequest(String inputUrl) throws IOException {
         JsonObject jsonObject = new JsonObject();
         Gson gson = new Gson();
         URL url = new URL(inputUrl);
@@ -57,6 +59,23 @@ public class GetMap {
         }
         bufferedReader.close();
         return jsonObject;
+    }
+
+    public static void createJsonFile(String input) {
+        Gson gson = new Gson();
+        String json = gson.toJson(input);
+
+        try (
+                FileWriter writer = new FileWriter("result.json", false)) {
+
+            writer.write(json);
+            writer.flush();
+
+        } catch (
+                IOException ex) {
+
+            System.out.println(ex.getMessage());
+        }
     }
 
 }
