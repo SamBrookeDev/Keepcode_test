@@ -43,7 +43,7 @@ public class Main {
 
         String json = gson.toJson(resultMap);
 
-        try (FileWriter writer = new FileWriter("resultMa.json", false)) {
+        try (FileWriter writer = new FileWriter("resultMap.json", false)) {
 
             writer.write(json);
             writer.flush();
