@@ -11,7 +11,7 @@ public class Main {
 
         result.entrySet().forEach(System.out::println);
 
-        CountryPhoneNumbers.createJsonFile(result.toString());
+        CountryPhoneNumbers.createJsonFile(result);
 
 
 

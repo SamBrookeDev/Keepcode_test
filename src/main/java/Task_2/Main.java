@@ -1,39 +1,61 @@
 package Task_2;
 
+import Task_1.CountryPhoneNumbers;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class Main {
 
 
     public static void main(String[] args) throws IOException {
+        Gson gson = new Gson();
+        CountryPhoneNumbers obj = new CountryPhoneNumbers();
+        JsonObject input = obj.getRequest("https://onlinesim.ru/price-list-data?type=receive");
+        JsonObject inputCountries = input.getAsJsonObject("countries");
+        JsonObject inputText = input.getAsJsonObject("text");
+        JsonObject inputList = input.getAsJsonObject("list");
+        ArrayList<String> key = new ArrayList<>(inputCountries.keySet());
+        ArrayList<String> country = new ArrayList<>();
+        Map<String, Map<String, String>> resultMap = new HashMap<>();
 
-            JsonObject jsonObject = new JsonObject();
-            Gson gson = new Gson();
-            URL url = new URL("http://onlinesim.ru/price-list");
-            String responce;
-            String line;
+        for (String k : key) {
 
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod("GET");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+            Type type = new TypeToken<Map<String, String>>() {
+            }.getType();
+            Map<String, String> myMap = gson.fromJson(inputList.get(k), type);
+            String countryName = inputText.getAsJsonObject().get("country_" + k).getAsString();
+            resultMap.put(countryName, myMap);
 
-            StringBuilder sb = new StringBuilder();
+        }
 
-            while ((responce = bufferedReader.readLine()) != null) {
-                sb.append(responce);
-                sb.append("\n");
-            }
+        resultMap.entrySet().forEach(System.out::println);
 
-            bufferedReader.close();
-        System.out.println(sb.toString());
+        String json = gson.toJson(resultMap);
+
+        try (FileWriter writer = new FileWriter("resultMa.json", false)) {
+
+            writer.write(json);
+            writer.flush();
+
+        } catch (IOException ex) {
+
+            System.out.println(ex.getMessage());
+
         }
     }
+
+}
+
+
 

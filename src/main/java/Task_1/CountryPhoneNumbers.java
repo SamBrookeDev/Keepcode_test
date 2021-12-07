@@ -45,7 +45,7 @@ public class CountryPhoneNumbers {
 
     //Добавим метод-обработчик URL для получения json
 
-    private JsonObject getRequest(String inputUrl) throws IOException {
+    public JsonObject getRequest(String inputUrl) throws IOException {
         JsonObject jsonObject = new JsonObject();
         Gson gson = new Gson();
         URL url = new URL(inputUrl);
@@ -63,7 +63,7 @@ public class CountryPhoneNumbers {
         return jsonObject;
     }
 
-    public static void createJsonFile(String input) {
+    public static void createJsonFile(Map input) {
         Gson gson = new Gson();
         String json = gson.toJson(input);
 
